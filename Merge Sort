@@ -1,0 +1,89 @@
+void mergesort(node** head)
+{
+    node* source = *head;
+    if(source == NULL || source->next == NULL)
+        return;
+    node* a = source;
+    node* b = NULL;
+    
+    splitList(source,&a,&b);
+    mergesort(&a);
+    mergesort(&b);
+    
+    *head = mergeList(a,b);
+}
+
+void splitList(struct node* source, struct node** frontref, struct node** backref)
+{
+    node* fast; 
+    node* slow; 
+    slow = source; 
+    fast = source->next; 
+  
+    /* Advance 'fast' two nodes, and advance 'slow' one node */
+    while (fast != NULL) { 
+        fast = fast->next; 
+        if (fast != NULL) { 
+            slow = slow->next; 
+            fast = fast->next; 
+        } 
+    } 
+  
+    /* 'slow' is before the midpoint in the list, so split it in two  
+    at that point. */
+    *frontref = source; 
+    *backref = slow->next; 
+    slow->next = NULL; 
+
+}
+
+struct node* mergeList(struct node* a, struct node* b)
+{
+    if (a == NULL) 
+        return (b); 
+    else if (b == NULL) 
+        return (a); 
+
+    node *p1,*p2;
+    p1 = a; p2 = b;
+    node* head = NULL;
+    node* last = NULL;
+    while(p1 && p2)
+    {
+        if(p1->data <= p2->data)
+        {
+            if(head == NULL)
+            {
+                head = p1;
+                last = head;
+                last->next = NULL;
+                p1 = p1->next;
+                continue;
+            }
+            
+            last->next = p1;
+            last = p1;
+            last->next = NULL;
+            p1 = p1->next;
+        }
+        else
+        {
+            if(head == NULL)
+            {
+                head = p2;
+                last = head;
+                last->next = NULL;
+                p2 = p2->next;
+                continue;
+            }
+            
+            last->next = p2;
+            last = p2;
+            last->next = NULL;
+            p2 = p2->next;
+        }
+    }
+    
+    return head;
+}
+
